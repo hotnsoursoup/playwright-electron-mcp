@@ -1,4 +1,4 @@
-# lib/ # Commented out to include built files for npm/GitHub installs
+lib/
 node_modules/
 test-results/
 playwright-report/
