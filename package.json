@@ -1,5 +1,5 @@
 {
-  "name": "@playwright/mcp-electron",
+  "name": "@hotnsoursoup/playwright-mcp-electron",
   "version": "0.0.30",
   "description": "Playwright Tools for MCP with Electron Support",
   "type": "module",
@@ -7,14 +7,31 @@
     "type": "git",
     "url": "git+https://github.com/hotnsoursoup/playwright-electron-mcp.git"
   },
-  "homepage": "https://playwright.dev",
+  "homepage": "https://github.com/hotnsoursoup/playwright-electron-mcp",
   "engines": {
     "node": ">=18"
   },
   "author": {
     "name": "Microsoft Corporation"
   },
+  "contributors": [
+    {
+      "name": "hotnsoursoup",
+      "url": "https://github.com/hotnsoursoup"
+    }
+  ],
   "license": "Apache-2.0",
+  "keywords": [
+    "playwright",
+    "electron",
+    "mcp",
+    "model-context-protocol",
+    "automation",
+    "testing",
+    "browser",
+    "desktop",
+    "e2e"
+  ],
   "scripts": {
     "build": "tsc",
     "build:extension": "tsc --project extension",
@@ -29,7 +46,7 @@
     "etest": "playwright test --project=chromium-extension",
     "run-server": "node lib/browserServer.js",
     "clean": "rm -rf lib && rm -rf extension/lib",
-    "npm-publish": "npm run clean && npm run build && npm run test && npm publish",
+    "npm-publish": "npm run clean && npm run build && npm run test && npm publish"
   },
   "exports": {
     "./package.json": "./package.json",

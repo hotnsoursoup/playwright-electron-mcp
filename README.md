@@ -1,12 +1,15 @@
-## Playwright MCP
+## Playwright MCP with Electron Support
 
-A Model Context Protocol (MCP) server that provides browser automation capabilities using [Playwright](https://playwright.dev). This server enables LLMs to interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models.
+A Model Context Protocol (MCP) server that provides browser and **Electron application** automation capabilities using [Playwright](https://playwright.dev). This enhanced fork of the [official Playwright MCP](https://github.com/microsoft/playwright-mcp) includes full support for testing and automating Electron desktop applications alongside traditional web browser automation.
 
 ### Key Features
 
+- **Electron support**. Test and automate Electron desktop applications with dedicated tools.
 - **Fast and lightweight**. Uses Playwright's accessibility tree, not pixel-based input.
 - **LLM-friendly**. No vision models needed, operates purely on structured data.
 - **Deterministic tool application**. Avoids ambiguity common with screenshot-based approaches.
+- **Main process access**. Execute JavaScript in Electron's main process.
+- **Window management**. Control and interact with multiple Electron windows.
 
 ### Requirements
 - Node.js 18 or newer
@@ -19,22 +22,24 @@ node utils/generate-links.js
 
 ### Getting started
 
-First, install the Playwright MCP server with your client. A typical configuration looks like this:
+First, install the Playwright Electron MCP server with your client. A typical configuration looks like this:
 
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "playwright-electron": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@hotnsoursoup/playwright-mcp-electron@latest"
       ]
     }
   }
 }
 ```
 
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D) [<img alt="Install in VS Code Insiders" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Server&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D)
+By default, this runs in Electron mode. To use regular browser automation, add `--browser chrome` or `--browser firefox`.
+
+[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright-electron%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540hotnsoursoup%252Fplaywright-mcp-electron%2540latest%2522%255D%257D) [<img alt="Install in VS Code Insiders" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Server&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright-electron%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540hotnsoursoup%252Fplaywright-mcp-electron%2540latest%2522%255D%257D)
 
 
 <details><summary><b>Install in VS Code</b></summary>
@@ -43,10 +48,10 @@ You can also install the Playwright MCP server using the VS Code CLI:
 
 ```bash
 # For VS Code
-code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
+code --add-mcp '{"name":"playwright-electron","command":"npx","args":["@hotnsoursoup/playwright-mcp-electron@latest"]}'
 ```
 
-After installation, the Playwright MCP server will be available for use with your GitHub Copilot agent in VS Code.
+After installation, the Playwright Electron MCP server will be available for use with your GitHub Copilot agent in VS Code.
 </details>
 
 <details>
@@ -58,7 +63,7 @@ After installation, the Playwright MCP server will be available for use with you
 
 #### Or install manually:
 
-Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx @playwright/mcp`. You can also verify config or add command like arguments via clicking `Edit`.
+Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx @hotnsoursoup/playwright-mcp-electron`. You can also verify config or add command like arguments via clicking `Edit`.
 
 ```js
 {
@@ -66,7 +71,7 @@ Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, u
     "playwright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@hotnsoursoup/playwright-mcp-electron@latest"
       ]
     }
   }
@@ -85,7 +90,7 @@ Follow Windsurf MCP [documentation](https://docs.windsurf.com/windsurf/cascade/m
     "playwright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@hotnsoursoup/playwright-mcp-electron@latest"
       ]
     }
   }
@@ -101,10 +106,10 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "playwright-electron": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@hotnsoursoup/playwright-mcp-electron@latest"
       ]
     }
   }
@@ -115,10 +120,10 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
 <details>
 <summary><b>Install in Claude Code</b></summary>
 
-Use the Claude Code CLI to add the Playwright MCP server:
+Use the Claude Code CLI to add the Playwright Electron MCP server:
 
 ```bash
-claude mcp add playwright npx @playwright/mcp@latest
+claude mcp add playwright-electron npx @hotnsoursoup/playwright-mcp-electron@latest
 ```
 </details>
 
@@ -127,11 +132,11 @@ claude mcp add playwright npx @playwright/mcp@latest
 
 #### Click the button to install:
 
-[![Install in Goose](https://block.github.io/goose/img/extension-install-dark.svg)](https://block.github.io/goose/extension?cmd=npx&arg=%40playwright%2Fmcp%40latest&id=playwright&name=Playwright&description=Interact%20with%20web%20pages%20through%20structured%20accessibility%20snapshots%20using%20Playwright)
+[![Install in Goose](https://block.github.io/goose/img/extension-install-dark.svg)](https://block.github.io/goose/extension?cmd=npx&arg=%40hotnsoursoup%2Fplaywright-mcp-electron%40latest&id=playwright-electron&name=Playwright%20Electron&description=Interact%20with%20web%20pages%20and%20Electron%20apps%20through%20structured%20accessibility%20snapshots%20using%20Playwright)
 
 #### Or install manually:
 
-Go to `Advanced settings` -> `Extensions` -> `Add custom extension`. Name to your liking, use type `STDIO`, and set the `command` to `npx @playwright/mcp`. Click "Add Extension".
+Go to `Advanced settings` -> `Extensions` -> `Add custom extension`. Name to your liking, use type `STDIO`, and set the `command` to `npx @hotnsoursoup/playwright-mcp-electron`. Click "Add Extension".
 </details>
 
 <details>
@@ -145,7 +150,7 @@ Open [Qodo Gen](https://docs.qodo.ai/qodo-documentation/qodo-gen) chat panel in 
     "playwright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@hotnsoursoup/playwright-mcp-electron@latest"
       ]
     }
   }
@@ -166,7 +171,7 @@ Follow the MCP install [guide](https://github.com/google-gemini/gemini-cli/blob/
     "playwright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@hotnsoursoup/playwright-mcp-electron@latest"
       ]
     }
   }
@@ -181,7 +186,7 @@ Playwright MCP server supports following arguments. They can be provided in the 
 <!--- Options generated by update-readme.js -->
 
 ```
-> npx @playwright/mcp@latest --help
+> npx @hotnsoursoup/playwright-mcp-electron@latest --help
   --allowed-origins <origins>  semicolon-separated list of origins to allow the
                                browser to request. Default is to allow all.
   --blocked-origins <origins>  semicolon-separated list of origins to block the
@@ -191,7 +196,7 @@ Playwright MCP server supports following arguments. They can be provided in the 
                                allowed.
   --block-service-workers      block service workers
   --browser <browser>          browser or chrome channel to use, possible
-                               values: chrome, firefox, webkit, msedge.
+                               values: chrome, firefox, webkit, msedge, electron.
   --browser-agent <endpoint>   Use browser agent (experimental).
   --caps <caps>                comma-separated list of capabilities to enable,
                                possible values: tabs, pdf, history, wait, files,
@@ -266,7 +271,7 @@ state [here](https://playwright.dev/docs/auth).
     "playwright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest",
+        "@hotnsoursoup/playwright-mcp-electron@latest",
         "--isolated",
         "--storage-state={path/to/storage.json}"
       ]
@@ -281,7 +286,7 @@ The Playwright MCP server can be configured using a JSON configuration file. You
 using the `--config` command line option:
 
 ```bash
-npx @playwright/mcp@latest --config path/to/config.json
+npx @hotnsoursoup/playwright-mcp-electron@latest --config path/to/config.json
 ```
 
 <details>
@@ -371,7 +376,7 @@ When running headed browser on system w/o display or from worker processes of th
 run the MCP server from environment with the DISPLAY and pass the `--port` flag to enable SSE transport.
 
 ```bash
-npx @playwright/mcp@latest --port 8931
+npx @hotnsoursoup/playwright-mcp-electron@latest --port 8931
 ```
 
 And then in MCP client config, set the `url` to the SSE endpoint:
@@ -415,7 +420,7 @@ docker build -t mcr.microsoft.com/playwright/mcp .
 ```js
 import http from 'http';
 
-import { createConnection } from '@playwright/mcp';
+import { createConnection } from '@hotnsoursoup/playwright-mcp-electron';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 
 http.createServer(async (req, res) => {
@@ -431,6 +436,69 @@ http.createServer(async (req, res) => {
 ```
 </details>
 
+### Electron Support
+
+This enhanced version includes full support for Electron applications. By default, it runs in Electron mode.
+
+#### Electron Configuration
+
+To test an Electron app, ensure your configuration points to your app:
+
+```js
+{
+  "mcpServers": {
+    "playwright-electron": {
+      "command": "npx",
+      "args": [
+        "@hotnsoursoup/playwright-mcp-electron@latest",
+        "--executable-path", "/path/to/electron",
+        "--cwd", "/path/to/your/electron/app"
+      ]
+    }
+  }
+}
+```
+
+Or use a config file:
+
+```json
+{
+  "browser": {
+    "browserName": "electron",
+    "launchOptions": {
+      "args": ["main.js"],
+      "executablePath": "electron",
+      "cwd": "/path/to/your/electron/app"
+    }
+  }
+}
+```
+
+#### Electron-Specific Tools
+
+In addition to all standard browser automation tools, Electron mode provides:
+
+- **`electron_evaluate`** - Execute JavaScript in the main Electron process
+- **`electron_windows`** - List all open Electron windows
+- **`electron_first_window`** - Get the first window of the application
+- **`electron_browser_window`** - Get BrowserWindow object for advanced control
+
+#### Example Electron Usage
+
+```javascript
+// Launch your Electron app (happens automatically)
+// Then use electron-specific tools:
+
+// Execute code in main process
+await electron_evaluate({ expression: "app.getVersion()" });
+
+// Get all windows
+await electron_windows();
+
+// Interact with the UI using standard tools
+await browser_click({ element: "Login button" });
+```
+
 ### Tools
 
 The tools are available in two modes:
@@ -443,10 +511,10 @@ To use Vision Mode, add the `--vision` flag when starting the server:
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "playwright-electron": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest",
+        "@hotnsoursoup/playwright-mcp-electron@latest",
         "--vision"
       ]
     }

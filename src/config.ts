@@ -63,11 +63,10 @@ export type CLIOptions = {
 
 const defaultConfig: FullConfig = {
   browser: {
-    browserName: 'chromium',
+    browserName: 'electron',
     launchOptions: {
-      channel: 'chrome',
-      headless: os.platform() === 'linux' && !process.env.DISPLAY,
-      chromiumSandbox: true,
+      args: ['main.js'],
+      executablePath: 'electron',
     },
     contextOptions: {
       viewport: null,
