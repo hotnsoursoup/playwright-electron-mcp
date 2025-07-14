@@ -1,6 +1,6 @@
 {
   "name": "@hotnsoursoup/playwright-mcp-electron",
-  "version": "0.0.30",
+  "version": "0.1.0",
   "description": "Playwright Tools for MCP with Electron Support",
   "type": "module",
   "repository": {
