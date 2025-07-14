@@ -29,7 +29,8 @@
     "etest": "playwright test --project=chromium-extension",
     "run-server": "node lib/browserServer.js",
     "clean": "rm -rf lib && rm -rf extension/lib",
-    "npm-publish": "npm run clean && npm run build && npm run test && npm publish"
+    "npm-publish": "npm run clean && npm run build && npm run test && npm publish",
+    "postinstall": "npm run build"
   },
   "exports": {
     "./package.json": "./package.json",
