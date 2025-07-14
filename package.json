@@ -1,11 +1,11 @@
 {
-  "name": "@playwright/mcp",
-  "version": "0.0.29",
-  "description": "Playwright Tools for MCP",
+  "name": "@playwright/mcp-electron",
+  "version": "0.0.30",
+  "description": "Playwright Tools for MCP with Electron Support",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/playwright-mcp.git"
+    "url": "git+https://github.com/hotnsoursoup/playwright-electron-mcp.git"
   },
   "homepage": "https://playwright.dev",
   "engines": {
@@ -65,6 +65,6 @@
     "typescript": "^5.8.2"
   },
   "bin": {
-    "mcp-server-playwright": "cli.js"
+    "mcp-server-playwright-electron": "cli.js"
   }
 }

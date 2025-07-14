@@ -29,6 +29,8 @@ import type { BrowserInfo, LaunchBrowserRequest } from './browserServer.js';
 const testDebug = debug('pw:mcp:test');
 
 export function contextFactory(browserConfig: FullConfig['browser']): BrowserContextFactory {
+  if (browserConfig.browserName === 'electron')
+    return new ElectronContextFactory(browserConfig);
   if (browserConfig.remoteEndpoint)
     return new RemoteContextFactory(browserConfig);
   if (browserConfig.cdpEndpoint)
@@ -103,12 +105,12 @@ class IsolatedContextFactory extends BaseContextFactory {
 
   protected override async _doObtainBrowser(): Promise<playwright.Browser> {
     await injectCdpPort(this.browserConfig);
-    const browserType = playwright[this.browserConfig.browserName];
+    const browserType = (playwright as any)[this.browserConfig.browserName];
     return browserType.launch({
       ...this.browserConfig.launchOptions,
       handleSIGINT: false,
       handleSIGTERM: false,
-    }).catch(error => {
+    }).catch((error: any) => {
       if (error.message.includes('Executable doesn\'t exist'))
         throw new Error(`Browser specified in your config is not installed. Either install it (likely) or change the config.`);
       throw error;
@@ -144,7 +146,7 @@ class RemoteContextFactory extends BaseContextFactory {
     url.searchParams.set('browser', this.browserConfig.browserName);
     if (this.browserConfig.launchOptions)
       url.searchParams.set('launch-options', JSON.stringify(this.browserConfig.launchOptions));
-    return playwright[this.browserConfig.browserName].connect(String(url));
+    return (playwright as any)[this.browserConfig.browserName].connect(String(url));
   }
 
   protected override async _doCreateContext(browser: playwright.Browser): Promise<playwright.BrowserContext> {
@@ -168,7 +170,7 @@ class PersistentContextFactory implements BrowserContextFactory {
     this._userDataDirs.add(userDataDir);
     testDebug('lock user data dir', userDataDir);
 
-    const browserType = playwright[this.browserConfig.browserName];
+    const browserType = (playwright as any)[this.browserConfig.browserName];
     for (let i = 0; i < 5; i++) {
       try {
         const browserContext = await browserType.launchPersistentContext(userDataDir, {
@@ -246,6 +248,50 @@ export class BrowserServerContextFactory extends BaseContextFactory {
     const dir = await userDataDir(this.browserConfig);
     await fs.promises.mkdir(dir, { recursive: true });
     return dir;
+  }
+}
+
+class ElectronContextFactory implements BrowserContextFactory {
+  readonly browserConfig: FullConfig['browser'];
+  private _electronApp: playwright.ElectronApplication | undefined;
+
+  constructor(browserConfig: FullConfig['browser']) {
+    this.browserConfig = browserConfig;
+  }
+
+  async createContext(): Promise<{ browserContext: playwright.BrowserContext, close: () => Promise<void> }> {
+    testDebug('create electron context');
+    
+    // Launch Electron app
+    const { _electron } = playwright;
+    const launchOptions: any = {
+      args: this.browserConfig.launchOptions?.args || ['main.js'],
+      executablePath: this.browserConfig.launchOptions?.executablePath,
+      cwd: (this.browserConfig.launchOptions as any)?.cwd,
+      env: this.browserConfig.launchOptions?.env,
+    };
+    
+    this._electronApp = await _electron.launch(launchOptions).catch((error: any) => {
+      if (error.message.includes('Executable doesn\'t exist'))
+        throw new Error(`Electron executable not found. Please ensure Electron is installed and executablePath is correct.`);
+      throw error;
+    });
+
+    // Get the browser context from the Electron app
+    const browserContext = this._electronApp.context();
+    
+    // Store reference to electron app for tools to access
+    (browserContext as any)._electronApp = this._electronApp;
+
+    const close = async () => {
+      testDebug('close electron context');
+      if (this._electronApp) {
+        await this._electronApp.close().catch(() => {});
+        this._electronApp = undefined;
+      }
+    };
+
+    return { browserContext, close };
   }
 }
 
